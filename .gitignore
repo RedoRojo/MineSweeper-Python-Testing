@@ -1,3 +1,7 @@
 __pycache__
 .vscode
 .idea
+minesweeper/.coverage
+minesweeper/__pycache__
+
+
