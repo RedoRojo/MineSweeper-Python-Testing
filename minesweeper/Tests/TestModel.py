@@ -18,6 +18,10 @@ class TestModel(unittest.TestCase):
     def test_get_field_width(self): 
         self.assertEqual(self.model.get_FIELD_WIDTH(), 100)
 
+    def test_get_field_height(self): 
+        self.model.FIELD_HEIGHT = 100
+        self.assertEqual(self.model.get_FIELD_HEIGHT(), 100)
+
     
 if __name__ == '__main__': 
     unittest.main()
