@@ -22,6 +22,10 @@ class TestModel(unittest.TestCase):
         self.model.FIELD_HEIGHT = 100
         self.assertEqual(self.model.get_FIELD_HEIGHT(), 100)
 
+    def test_get_mines_max(self): 
+        self.model.MINES_MAX = 60
+        self.assertEqual(self.model.get_MINES_MAX(), 60)
+
     
 if __name__ == '__main__': 
     unittest.main()
