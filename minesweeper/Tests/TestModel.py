@@ -46,6 +46,18 @@ class TestModel(unittest.TestCase):
         self.assertIsInstance(self.model.field, list)
         self.assertIsInstance(self.model.field[0], list)
         self.assertIsInstance(self.model.field[0][0], Cell)
+
+    def test_get_field(self): 
+        self.model.FIELD_HEIGHT = 10
+        self.model.FIELD_WIDTH = 10
+        self.model.MINES_MAX = 60
+        
+        self.model.create_field()
+        obtained_field = self.model.get_field()
+        self.assertIsInstance(obtained_field, list)
+        self.assertIsInstance(obtained_field[0], list)
+        self.assertIsInstance(obtained_field[0][0], Cell)
+        
     
 if __name__ == '__main__': 
     unittest.main()
