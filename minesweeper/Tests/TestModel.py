@@ -64,7 +64,9 @@ class TestModel(unittest.TestCase):
         self.model.MINES_MAX = 60
         self.model.create_field()
         self.assertIsInstance(self.model.get_cell(1,1), Cell)
-        
+
+    def test_get_seconds_from_the_start(self): 
+        self.assertEqual(self.model.get_seconds_from_start(), 1) 
     
 if __name__ == '__main__': 
     unittest.main()
