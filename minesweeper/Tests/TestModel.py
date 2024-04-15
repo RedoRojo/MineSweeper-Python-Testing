@@ -83,6 +83,12 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.model.FIELD_HEIGHT, 9)
         self.assertEqual(self.model.FIELD_WIDTH, 9)
         self.assertEqual(self.model.MINES_MAX, 10)
+        
+    def test_new_game_mid(self): 
+        self.model.new_game_mid() 
+        self.assertEqual(self.model.FIELD_HEIGHT, 16)
+        self.assertEqual(self.model.FIELD_WIDTH, 16)
+        self.assertEqual(self.model.MINES_MAX, 40)
     
 if __name__ == '__main__': 
     unittest.main()
