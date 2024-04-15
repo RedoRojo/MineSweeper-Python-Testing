@@ -3,14 +3,14 @@ import unittest
 import sys
 sys.path.append('../')
 from unittest.mock import MagicMock
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QApplication
 from unittest.mock import patch
 
 
 from view import View
+from view import StartButton
 
 class TestView(unittest.TestCase):
 
@@ -51,6 +51,22 @@ class TestView(unittest.TestCase):
     def test_input_box_int_cancel(self, input_mock):
         with self.assertRaises(SystemExit):
             self.view.input_box_int("Title", "Info")        
+
+class TestStartButton(unittest.TestCase):
+
+    def setUp(self):
+        self.app = QApplication([])
+        self.controller = MagicMock()
+        self.start_button = StartButton(self.controller)
+    
+    def test_load_smiles_success(self):
+        QPixmap.return_value = QPixmap(44, 44)
+        self.start_button.load_smiles()
+        self.assertIsNotNone(self.start_button.smiles)
+        self.assertEqual(len(self.start_button.smiles), 4)
+        for pixmap in self.start_button.smiles:
+            self.assertIsInstance(pixmap, QPixmap)
+
 
 if __name__ == '__main__':
     unittest.main()
