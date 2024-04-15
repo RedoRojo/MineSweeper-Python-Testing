@@ -99,5 +99,15 @@ class TestBoard(unittest.TestCase):
         self.board.init_board(numbers)
         self.assertEqual(len(self.board.numbers), 0)
 
+    def test_load_digits_happy_path(self):
+        self.board.load_digits()
+        self.assertEqual(len(self.board.digits), 11) ## preguntar al mgr
+    
+    def test_load_digits_number_range_is_zero(self):
+        with patch.object(__builtins__, 'range', return_value=range(0)):
+            self.board.load_digits()
+            self.assertEqual(len(self.board.digits), 0)
+    
+
 if __name__ == '__main__':
     unittest.main()
