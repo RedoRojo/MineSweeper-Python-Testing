@@ -9,6 +9,11 @@ from cell import Cell
 class TestModel(unittest.TestCase): 
     def setUp(self) -> None:
         self.model = Model()
+        self.model.FIELD_HEIGHT = 10
+        self.model.FIELD_WIDTH = 10
+        self.model.MINES_MAX = 60
+        controller = Controller(self.model)
+        self.model.set_controller(controller)
 
     def test_set_controller(self): 
         controller = Controller(self.model)
@@ -67,6 +72,11 @@ class TestModel(unittest.TestCase):
 
     def test_get_seconds_from_the_start(self): 
         self.assertEqual(self.model.get_seconds_from_start(), 1) 
+        
+    def test_new_game_without_flagged_cells(self): 
+        self.model.flagged_cells = -1
+        self.model.new_game()
+        self.assertIsInstance(self.model.get_field(), list)
     
 if __name__ == '__main__': 
     unittest.main()
