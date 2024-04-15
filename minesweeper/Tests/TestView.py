@@ -7,6 +7,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtWidgets import QApplication
+from unittest.mock import patch
+
 
 from view import View
 
@@ -28,6 +30,16 @@ class TestView(unittest.TestCase):
         self.assertTrue(self.view.centralWidget().layout() is not None)
         self.assertEqual(self.view.centralWidget().layout(), self.view.top_box)
         self.assertEqual(self.view.top_box.alignment(), Qt.AlignCenter)
+    
+    @patch('PyQt5.QtWidgets.QInputDialog.getText', return_value=("User Input", True))
+    def test_input_box_text_success(self, input_mock):
+        result = self.view.input_box_text("Title", "Info")
+        self.assertEqual(result, "User Input")
+
+    @patch('PyQt5.QtWidgets.QInputDialog.getText', return_value=(None, False))
+    def test_input_box_text_cancel(self, input_mock):
+        with self.assertRaises(SystemExit):
+            self.view.input_box_text("Title", "Info")        
 
 if __name__ == '__main__':
     unittest.main()
