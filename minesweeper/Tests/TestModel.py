@@ -77,6 +77,12 @@ class TestModel(unittest.TestCase):
         self.model.flagged_cells = -1
         self.model.new_game()
         self.assertIsInstance(self.model.get_field(), list)
+        
+    def test_new_game_easy(self): 
+        self.model.new_game_easy() 
+        self.assertEqual(self.model.FIELD_HEIGHT, 9)
+        self.assertEqual(self.model.FIELD_WIDTH, 9)
+        self.assertEqual(self.model.MINES_MAX, 10)
     
 if __name__ == '__main__': 
     unittest.main()
