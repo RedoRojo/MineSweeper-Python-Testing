@@ -5,12 +5,13 @@ sys.path.append('../')
 from unittest.mock import MagicMock
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QLabel
 from unittest.mock import patch
 
 
 from view import View
 from view import StartButton
+from view import Board
 
 class TestView(unittest.TestCase):
 
@@ -79,6 +80,24 @@ class TestStartButton(unittest.TestCase):
         event.button.return_value = Qt.RightButton
         self.start_button.mousePressEvent(event)
         self.controller_mock.start_new_game_smile.assert_not_called()
+
+class TestBoard(unittest.TestCase):
+    def setUp(self):
+        self.app = QApplication([])
+        self.board = Board()
+    
+    def test_init_board_non_empty_number(self):
+        numbers = 3
+        self.board.init_board(numbers)
+        self.assertEqual(len(self.board.numbers), 3)
+        for widget in self.board.numbers:
+            self.assertIsInstance(widget, QLabel)
+            self.assertIsNotNone(widget.pixmap())
+    
+    def test_init_board_empty_number(self):
+        numbers = 0
+        self.board.init_board(numbers)
+        self.assertEqual(len(self.board.numbers), 0)
 
 if __name__ == '__main__':
     unittest.main()
