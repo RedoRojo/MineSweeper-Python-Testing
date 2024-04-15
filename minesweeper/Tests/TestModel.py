@@ -90,5 +90,11 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.model.FIELD_WIDTH, 16)
         self.assertEqual(self.model.MINES_MAX, 40)
     
+    def test_new_game_hard(self): 
+        self.model.new_game_hard() 
+        self.assertEqual(self.model.FIELD_HEIGHT, 16)
+        self.assertEqual(self.model.FIELD_WIDTH, 30)
+        self.assertEqual(self.model.MINES_MAX, 99)
+
 if __name__ == '__main__': 
     unittest.main()
