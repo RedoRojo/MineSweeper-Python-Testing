@@ -111,5 +111,19 @@ class TestModel(unittest.TestCase):
         self.model.field[2][2].mined = True 
         self.assertEqual(self.model.check_neighbors(self.model.field[1][1]), 8)
 
+    def test_check_neighbors_cell_with_zero_neighbors(self): 
+        self.model.create_field() 
+        self.model.checked = []
+        self.model.field[1][1].mined = False 
+        self.model.field[0][0].mined = False
+        self.model.field[0][1].mined = False
+        self.model.field[0][2].mined = False
+        self.model.field[1][0].mined = False
+        self.model.field[1][2].mined = False
+        self.model.field[2][0].mined = False
+        self.model.field[2][1].mined = False
+        self.model.field[2][2].mined = False 
+        self.assertEqual(self.model.check_neighbors(self.model.field[1][1]), 0)
+
 if __name__ == '__main__': 
     unittest.main()
