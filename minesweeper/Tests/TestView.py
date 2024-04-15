@@ -56,8 +56,8 @@ class TestStartButton(unittest.TestCase):
 
     def setUp(self):
         self.app = QApplication([])
-        self.controller = MagicMock()
-        self.start_button = StartButton(self.controller)
+        self.controller_mock = MagicMock()
+        self.start_button = StartButton(self.controller_mock)
     
     def test_load_smiles_success(self):
         QPixmap.return_value = QPixmap(44, 44)
@@ -66,7 +66,19 @@ class TestStartButton(unittest.TestCase):
         self.assertEqual(len(self.start_button.smiles), 4)
         for pixmap in self.start_button.smiles:
             self.assertIsInstance(pixmap, QPixmap)
-
+    
+    def test_mousePressEvent_left_button(self):
+        event = MagicMock()
+        event.button.return_value = Qt.LeftButton
+        self.start_button.mousePressEvent(event)
+        self.controller_mock.start_new_game_smile.assert_called_once()
+        self.assertIsNotNone(self.start_button.pixmap())
+    
+    def test_mousePressEvent_other_button(self):
+        event = MagicMock()
+        event.button.return_value = Qt.RightButton
+        self.start_button.mousePressEvent(event)
+        self.controller_mock.start_new_game_smile.assert_not_called()
 
 if __name__ == '__main__':
     unittest.main()
