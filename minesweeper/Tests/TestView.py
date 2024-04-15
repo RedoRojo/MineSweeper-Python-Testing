@@ -39,7 +39,18 @@ class TestView(unittest.TestCase):
     @patch('PyQt5.QtWidgets.QInputDialog.getText', return_value=(None, False))
     def test_input_box_text_cancel(self, input_mock):
         with self.assertRaises(SystemExit):
-            self.view.input_box_text("Title", "Info")        
+            self.view.input_box_text("Title", "Info")
+
+
+    @patch('PyQt5.QtWidgets.QInputDialog.getInt', return_value=("6", True))
+    def test_input_box_int_success(self, input_mock):
+        result = self.view.input_box_int("Title", "Info")
+        self.assertEqual(result, "6")
+
+    @patch('PyQt5.QtWidgets.QInputDialog.getInt', return_value=(None, False))
+    def test_input_box_int_cancel(self, input_mock):
+        with self.assertRaises(SystemExit):
+            self.view.input_box_int("Title", "Info")        
 
 if __name__ == '__main__':
     unittest.main()
