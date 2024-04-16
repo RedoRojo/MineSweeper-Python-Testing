@@ -1,12 +1,12 @@
 import unittest
-import unittest
 import sys
 sys.path.append('../')
 from unittest import mock
 from unittest.mock import MagicMock
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap, QMouseEvent
+from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtWidgets import QApplication, QLabel
+from PyQt5.QtTest import QTest
 from unittest.mock import patch
 
 
@@ -44,11 +44,11 @@ class TestView(unittest.TestCase):
         with self.assertRaises(SystemExit):
             self.view.input_box_text("Title", "Info")
 
-
     @patch('PyQt5.QtWidgets.QInputDialog.getInt', return_value=("6", True))
     def test_input_box_int_success(self, input_mock):
         result = self.view.input_box_int("Title", "Info")
         self.assertEqual(result, "6")
+
 
     @patch('PyQt5.QtWidgets.QInputDialog.getInt', return_value=(None, False))
     def test_input_box_int_cancel(self, input_mock):
@@ -152,7 +152,86 @@ class TestField(unittest.TestCase):
 
         for i, file in enumerate(files, start=9):
             self.assertIsInstance(self.field.assets[i], QPixmap)
+    
+    def test_mouse_release_event_first_path(self):
+        event_mock = MagicMock()
+        event_mock.pos.return_value = QPoint(-100,-100)
+        with patch.object(self.field, 'update') as update_mock:
+            self.field.mouseReleaseEvent(event_mock)
+        value = self.field.out_of_frame
+        self.assertEqual(value, True)
+    
+    def test_mouse_release_event_second_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_status.return_value = "Win"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.mouseReleaseEvent(event_mock)
+        self.assertEqual(self.field.is_winner, True)
+    
+    def test_mouse_release_event_third_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_status.return_value = "Lose"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.mouseReleaseEvent(event_mock)
+        self.assertEqual(self.field.is_winner, False)
 
+    def test_mouse_release_event_fourth_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_status.return_value = "Game"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+
+        mock_field = [[MagicMock() for _ in range(100)] for _ in range(100)]
+        self.controller_mock.get_field.return_value = mock_field
+
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.last_x = 10
+        self.field.last_y = 10
+        self.field.mouseReleaseEvent(event_mock)
+        self.assertEqual(self.field.distinct_coords, True)
+    
+    def test_mouse_release_event_fifth_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        event_mock.button.return_value = Qt.LeftButton
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_status.return_value = "Game"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.last_x = 0
+        self.field.last_y = 0
+        self.field.mouseReleaseEvent(event_mock)
+        self.controller_mock.left_click.assert_called_once
+    
+    def test_mouse_release_event_fifth_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        event_mock.button.return_value = Qt.RightButton
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_status.return_value = "Game"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.last_x = 0
+        self.field.last_y = 0
+        self.field.mouseReleaseEvent(event_mock)
+        self.controller_mock.right_click.assert_called_once
 
 if __name__ == '__main__':
     unittest.main()

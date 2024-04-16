@@ -263,6 +263,9 @@ class Field(QWidget):
         self.setFixedWidth(self.SIZE * self.controller.get_field_width())
         self.setFixedHeight(self.SIZE * self.controller.get_field_height())
         self.create_timer = True
+        self.out_of_frame = False
+        self.is_winner = False
+        self.distinct_coords = False
 
     def load_assets(self):
         # field cells assets loading.
@@ -311,21 +314,24 @@ class Field(QWidget):
         if self.test_mouse_coordinates(_x, _y):
             status = self.controller.get_status()
             if status == "Game":
-                if self.last_x == x and self.last_y == y:
+                if (self.last_x, self.last_y) == (x,y):
                     if event.button() == Qt.LeftButton:
                         self.controller.left_click(x, y)
                     if event.button() == Qt.RightButton:
                         self.controller.right_click(x, y)
                 else:
+                    self.distinct_coords = True
                     field = self.controller.get_field()
                     field[self.last_y][self.last_x].int_state = self.last_clicked
                 self.top_panel.start_btn.set_start()
             status = self.controller.get_status()
             if status == "Win":
                 self.top_panel.start_btn.set_won()
+                self.is_winner = True
             if status == "Lose":
                 self.top_panel.start_btn.set_lost()
-
+        else:
+            self.out_of_frame = True
         self.update()
 
     def test_mouse_coordinates(self, x, y):
