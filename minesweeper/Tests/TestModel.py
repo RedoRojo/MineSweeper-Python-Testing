@@ -214,5 +214,23 @@ class TestModel(unittest.TestCase):
         is_mined_cell = self.model.is_mined(home_cell, 0, 1) 
         self.assertIsInstance(is_mined_cell, bool)
 
+    def test_game_status_game_over(self): 
+        self.model.is_game_over = True
+        self.assertEqual(self.model.game_status(), "Lose")
+
+    def test_game_status_win(self): 
+        self.model.create_field()
+        self.model.is_game_over = False
+        self.model.open_cells = 100
+        self.model.flag_win = 1
+        self.assertEqual(self.model.game_status(), "Win")
+
+    def test_game_status_in_game(self): 
+        self.model.create_field()
+        self.model.is_game_over = False
+        self.model.open_cells = 10
+        self.model.flag_win = 1
+        self.assertEqual(self.model.game_status(), "Game")
+
 if __name__ == '__main__': 
     unittest.main()
