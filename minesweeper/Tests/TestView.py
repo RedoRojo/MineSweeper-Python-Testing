@@ -108,6 +108,22 @@ class TestBoard(unittest.TestCase):
             self.board.load_digits()
             self.assertEqual(len(self.board.digits), 0)
     
+    def test_set_board_first_path(self):
+        number = 10
+        self.board.numbers = []
+        self.assertEqual(self.board.set(number), False)
+
+    def test_set_second_path(self):
+        number = -10
+        self.board.numbers = [MagicMock(), MagicMock()]
+        self.board.set(number)
+        self.assertEqual(self.board.k, 2)
+    
+    def test_set_third_path(self):
+        number = 1
+        self.board.numbers = [MagicMock() for _ in range(3)]
+        self.board.set(number)
+        self.assertEqual(self.board.out_of_boundary, True)
 
 if __name__ == '__main__':
     unittest.main()
