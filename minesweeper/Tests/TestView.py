@@ -2,6 +2,7 @@ import unittest
 import unittest
 import sys
 sys.path.append('../')
+from unittest import mock
 from unittest.mock import MagicMock
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
@@ -12,6 +13,7 @@ from unittest.mock import patch
 from view import View
 from view import StartButton
 from view import Board
+from view import Field
 
 class TestView(unittest.TestCase):
 
@@ -124,6 +126,33 @@ class TestBoard(unittest.TestCase):
         self.board.numbers = [MagicMock() for _ in range(3)]
         self.board.set(number)
         self.assertEqual(self.board.out_of_boundary, True)
+    
+class TestField(unittest.TestCase):
+    def setUp(self):
+        self.app = QApplication([])
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+
+    def test_load_assets(self):
+        self.field.load_assets()
+        self.assertIsInstance(self.field.assets, list)
+        self.assertTrue(len(self.field.assets) > 0)
+        for i in range(9):
+            self.assertIsInstance(self.field.assets[i], QPixmap)
+
+        files = [
+            "blank",
+            "flagged",
+            "question",
+            "mine",
+            "mineclicked",
+            "misflagged",
+        ]
+
+        for i, file in enumerate(files, start=9):
+            self.assertIsInstance(self.field.assets[i], QPixmap)
+
 
 if __name__ == '__main__':
     unittest.main()
