@@ -205,6 +205,8 @@ class Board(QHBoxLayout):
         self.numbers = None
         self.load_digits()
         self.init_board(numbers)
+        self.k = 0
+        self.out_of_boundary = False
 
     def init_board(self, numbers):
         self.setSpacing(0)
@@ -228,12 +230,13 @@ class Board(QHBoxLayout):
             minus = True
             number = number * (-1)
         if len(str(number)) > len(self.numbers): return False
-        k = 0
+        self.k = 0
         for _number in self.numbers[::-1]:
-            if k < len(str(number)):
-                k += 1
-                _number.setPixmap(self.digits[int(str(number)[-k])])
+            if self.k < len(str(number)):
+                self.k += 1
+                _number.setPixmap(self.digits[int(str(number)[-self.k])])
             else:
+                self.out_of_boundary = True
                 _number.setPixmap(self.digits[0])
         if minus:
             self.numbers[0].setPixmap(self.digits[10])
