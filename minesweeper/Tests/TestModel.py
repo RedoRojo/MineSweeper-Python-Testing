@@ -124,6 +124,18 @@ class TestModel(unittest.TestCase):
         self.model.field[2][1].mined = False
         self.model.field[2][2].mined = False 
         self.assertEqual(self.model.check_neighbors(self.model.field[1][1]), 0)
+        
+    def test_open_neighbors(self): 
+        self.model.create_field()
+        self.model.open_neighbors(self.model.get_cell(1,1)) 
+        self.assertEqual(self.model.get_cell(0, 0).state, "opened")
+        self.assertEqual(self.model.get_cell(0, 1).state, "opened")
+        self.assertEqual(self.model.get_cell(0, 2).state, "opened")
+        self.assertEqual(self.model.get_cell(1, 0).state, "opened")
+        self.assertEqual(self.model.get_cell(1, 2).state, "opened")
+        self.assertEqual(self.model.get_cell(2, 0).state, "opened")
+        self.assertEqual(self.model.get_cell(2, 1).state, "opened")
+        self.assertEqual(self.model.get_cell(2, 2).state, "opened")
 
 if __name__ == '__main__': 
     unittest.main()
