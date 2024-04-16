@@ -33,33 +33,27 @@ class TestView(unittest.TestCase):
         self.assertTrue(self.view.centralWidget().layout() is not None)
         self.assertEqual(self.view.centralWidget().layout(), self.view.top_box)
         self.assertEqual(self.view.top_box.alignment(), Qt.AlignCenter)
-        print("Test 1 passed")
     
     @patch('PyQt5.QtWidgets.QInputDialog.getText', return_value=("User Input", True))
     def test_input_box_text_success(self, input_mock):
         result = self.view.input_box_text("Title", "Info")
         self.assertEqual(result, "User Input")
-        print("Test 2 passed")
-
 
     @patch('PyQt5.QtWidgets.QInputDialog.getText', return_value=(None, False))
     def test_input_box_text_cancel(self, input_mock):
         with self.assertRaises(SystemExit):
             self.view.input_box_text("Title", "Info")
-        print("Test 3 passed")
 
     @patch('PyQt5.QtWidgets.QInputDialog.getInt', return_value=("6", True))
     def test_input_box_int_success(self, input_mock):
         result = self.view.input_box_int("Title", "Info")
         self.assertEqual(result, "6")
-        print("Test 4 passed")
 
 
     @patch('PyQt5.QtWidgets.QInputDialog.getInt', return_value=(None, False))
     def test_input_box_int_cancel(self, input_mock):
         with self.assertRaises(SystemExit):
             self.view.input_box_int("Title", "Info")        
-        print("Test 5 passed")
 
 class TestStartButton(unittest.TestCase):
 
@@ -75,7 +69,6 @@ class TestStartButton(unittest.TestCase):
         self.assertEqual(len(self.start_button.smiles), 4)
         for pixmap in self.start_button.smiles:
             self.assertIsInstance(pixmap, QPixmap)
-        print("Test 6 passed")
     
     def test_mousePressEvent_left_button(self):
         event = MagicMock()
@@ -83,14 +76,12 @@ class TestStartButton(unittest.TestCase):
         self.start_button.mousePressEvent(event)
         self.controller_mock.start_new_game_smile.assert_called_once()
         self.assertIsNotNone(self.start_button.pixmap())
-        print("Test 7 passed")
     
     def test_mousePressEvent_other_button(self):
         event = MagicMock()
         event.button.return_value = Qt.RightButton
         self.start_button.mousePressEvent(event)
         self.controller_mock.start_new_game_smile.assert_not_called()
-        print("Test 8 passed")
 
 class TestBoard(unittest.TestCase):
     def setUp(self):
