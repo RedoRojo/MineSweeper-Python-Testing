@@ -176,9 +176,43 @@ class TestModel(unittest.TestCase):
         self.model.create_field()
         self.model.checked = []
         home_cell = self.model.get_cell(9, 9)
-        response = self.model.open_one_neighbor(home_cell, 1, 1) 
+        response = self.model.open_one_neighbor(home_cell, 0, 1) 
         self.assertFalse(response)
 
-        
+    def test_is_mined_valid_cell(self): 
+        self.model.create_field()
+        self.model.checked = []
+        home_cell = self.model.get_cell(1,1)
+        is_mined_cell = self.model.is_mined(home_cell, 0, 0) 
+        self.assertIsInstance(is_mined_cell, bool)
+
+    def test_is_mined_invalid_cell_left(self): 
+        self.model.create_field()
+        self.model.checked = []
+        home_cell = self.model.get_cell(0, 1)
+        is_mined_cell = self.model.is_mined(home_cell, -1, 0) 
+        self.assertIsInstance(is_mined_cell, bool)
+
+    def test_is_mined_invalid_cell_right(self): 
+        self.model.create_field()
+        self.model.checked = []
+        home_cell = self.model.get_cell(9, 1)
+        is_mined_cell = self.model.is_mined(home_cell, 1, 0) 
+        self.assertIsInstance(is_mined_cell, bool)
+
+    def test_is_mined_invalid_cell_up(self): 
+        self.model.create_field()
+        self.model.checked = []
+        home_cell = self.model.get_cell(9, 0)
+        is_mined_cell = self.model.is_mined(home_cell, 0, -1) 
+        self.assertIsInstance(is_mined_cell, bool)
+
+    def test_is_mined_invalid_cell_down(self): 
+        self.model.create_field()
+        self.model.checked = []
+        home_cell = self.model.get_cell(9, 9)
+        is_mined_cell = self.model.is_mined(home_cell, 0, 1) 
+        self.assertIsInstance(is_mined_cell, bool)
+
 if __name__ == '__main__': 
     unittest.main()
