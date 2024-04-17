@@ -267,5 +267,38 @@ class TestModel(unittest.TestCase):
         self.model.game_over()
         self.assertEqual(self.model.get_cell(1, 1).int_state, 9)
 
+    def test_next_mark_flagged_cell(self): 
+        self.model.create_field()
+        self.model.flagged_cells = 1
+        self.model.get_cell(1,1).state = "flagged"
+        self.model.get_cell(1,1).int_state = 10
+        self.model.next_mark(1, 1)
+        self.assertEqual(self.model.flagged_cells, 0)
+
+    def test_next_mark_questioned_cell(self): 
+        self.model.create_field()
+        self.model.flagged_cells = 1
+        self.model.get_cell(1,1).state = "questioned"
+        self.model.get_cell(1,1).int_state = 11
+        self.model.next_mark(1, 1)
+        self.assertEqual(self.model.flagged_cells, 1)
+
+    def test_next_mark_closed_cell(self): 
+        self.model.create_field()
+        self.model.flagged_cells = 1
+        self.model.get_cell(1,1).state = "closed"
+        self.model.get_cell(1,1).int_state = 9
+        self.model.next_mark(1, 1)
+        self.assertEqual(self.model.flagged_cells, 2)
+
+    def test_next_mark_game_stopped(self): 
+        self.model.create_field()
+        self.model.stop_game = True
+        self.model.flagged_cells = 1
+        self.model.get_cell(1,1).state = "flagged"
+        self.model.get_cell(1,1).int_state = 10
+        self.model.next_mark(1, 1)
+        self.assertEqual(self.model.flagged_cells, 1)
+
 if __name__ == '__main__': 
     unittest.main()
