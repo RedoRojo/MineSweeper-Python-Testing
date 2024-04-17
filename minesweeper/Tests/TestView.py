@@ -232,6 +232,93 @@ class TestField(unittest.TestCase):
         self.field.last_y = 0
         self.field.mouseReleaseEvent(event_mock)
         self.controller_mock.right_click.assert_called_once
+    
+    def test_mouse_press_event_first_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        event_mock.button.return_value = Qt.RightButton
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+
+        field_mock = [[MagicMock() for _ in range(100)] for _ in range(100)]
+        field_mock[0][0].int_state = 9 
+
+        self.controller_mock.get_status.return_value = "Game"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.controller_mock.get_field.return_value = field_mock
+        
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.mousePressEvent(event_mock)
+        self.assertEqual(self.field.distinct_coords, True)
+    
+    def test_mouse_press_event_second_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(-1, -1)
+        event_mock.button.return_value = Qt.RightButton
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.mousePressEvent(event_mock)
+        self.assertEqual(self.field.out_of_frame, True)
+    
+    def test_mouse_press_event_third_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        event_mock.button.return_value = Qt.LeftButton
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+
+        field_mock = [[MagicMock() for _ in range(100)] for _ in range(100)]
+        field_mock[0][0].int_state = 9 
+
+        self.controller_mock.get_status.return_value = "Game"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.controller_mock.get_field.return_value = field_mock
+        
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.mousePressEvent(event_mock)
+        self.assertEqual(self.field.controller.get_field()[0][0].int_state, 0)
+    
+    def test_mouse_press_event_fourth_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        event_mock.button.return_value = Qt.LeftButton
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+
+        field_mock = [[MagicMock() for _ in range(100)] for _ in range(100)]
+        field_mock[0][0].int_state = 8 
+
+        self.controller_mock.get_status.return_value = "Game"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.controller_mock.get_field.return_value = field_mock
+        
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.mousePressEvent(event_mock)
+        self.assertNotEqual(self.field.controller.get_field()[0][0].int_state, 0)
+        self.assertEqual(self.field.distinct_coords, False)
+    
+    def test_mouse_press_event_fourth_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        event_mock.pos.return_value = QPoint(1, 1)
+        event_mock.button.return_value = Qt.LeftButton
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_status.return_value = "NoGame"
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        self.field.last_x = 10000
+        self.field.last_y = 10000
+        self.field.mousePressEvent(event_mock)
+        self.assertNotEqual((self.field.last_x, self.field.last_y), (0,0))
 
 if __name__ == '__main__':
     unittest.main()

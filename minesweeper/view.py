@@ -304,7 +304,11 @@ class Field(QWidget):
                     if event.button() == Qt.LeftButton:
                         field[y][x].int_state = 0
                         self.top_panel.start_btn.set_uhoh()
+                    else:
+                        self.distinct_coords = True
                     self.update()
+        else:
+            self.out_of_frame = True
 
     def mouseReleaseEvent(self, event):
         _x = event.pos().x()
