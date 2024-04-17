@@ -337,5 +337,12 @@ class TestModel(unittest.TestCase):
         self.assertIsInstance(self.model.playersRandom[-1], Player)
         self.assertEqual(self.model.playersRandom[-1].get_nome(), "Joselito")
 
+class TestPlayer(unittest.TestCase):
+    def setUp(self) -> None:
+        self.player = Player("Nicodemo", 300)
+
+    def test_get_player_name(self): 
+        self.assertEqual(self.player.get_nome(), "Nicodemo")
+
 if __name__ == '__main__': 
     unittest.main()
