@@ -83,6 +83,48 @@ class TestTopBox(unittest.TestCase):
     def test_create_field(self):
         self.top_box.create_field()
         self.assertIsNotNone(self.top_box.field)
+        
+class TestTopPanel(unittest.TestCase):
+    def setUp(self):
+        self.app = QApplication([])
+        self.controller = MagicMock()
+        self.controller.get_mines_max.return_value = 10 
+        self.top_panel = TopPanel(self.controller)
+
+    def test_create_mines_counter(self):
+        self.top_panel.create_mines_counter()
+        self.assertIsNotNone(self.top_panel.board)
+
+    def test_timerEvent(self):
+        event = MagicMock()
+        self.controller.add_timer.return_value = None
+        self.controller.get_seconds.return_value = 10
+        self.top_panel.timerEvent(event)
+        self.controller.add_timer.assert_called_once()
+    
+    def test_create_timer(self):
+        self.top_panel.create_timer()
+        self.assertIsNotNone(self.top_panel.timer)
+    
+    def test_run_timer(self):
+        self.top_panel.run_timer()
+        self.assertIsNotNone(self.top_panel.timer)
+    
+    def test_stop_timer(self):
+        mock_qtimer = MagicMock()
+        self.top_panel.qtimer = mock_qtimer
+        self.top_panel.stop_timer()
+        mock_qtimer.stop.assert_called_once()
+    
+    def test_clear_timer(self):
+        mock_timer = MagicMock()
+        self.top_panel.timer = mock_timer
+        self.top_panel.clear_timer()
+        mock_timer.set.assert_called_with(0)
+    
+    def test_create_start_button(self):
+        self.top_panel.create_start_button()
+        self.assertEqual(self.top_panel.start_btn != None, True)
 
 class TestStartButton(unittest.TestCase):
 
