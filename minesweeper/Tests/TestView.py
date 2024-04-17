@@ -79,6 +79,10 @@ class TestTopBox(unittest.TestCase):
     def test_create_top_panel(self):
         self.top_box.create_top_panel()
         self.assertIsNotNone(self.top_box.top_panel)
+    
+    def test_create_field(self):
+        self.top_box.create_field()
+        self.assertIsNotNone(self.top_box.field)
 
 class TestStartButton(unittest.TestCase):
 
