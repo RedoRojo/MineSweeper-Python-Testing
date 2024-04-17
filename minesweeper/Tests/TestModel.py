@@ -439,6 +439,43 @@ class TestTo_csv(unittest.TestCase):
 
         self.assertEqual(expected_rows, rows)
 
+class TestTo_txt(unittest.TestCase): 
+    def setUp(self) -> None:
+        self.model = Model()
+        self.txt_file_tool = To_txt()
+    
+    def tearDown(self):
+        try:
+            os.remove("historico.txt")
+        except OSError:
+            pass
+
+    def test_create_file_all_modes_players(self): 
+        self.model.playersEasy = [Player("Lazaro", 300)]
+        self.model.playersMid = [Player("Nicodemo", 480)]
+        self.model.playersHard = [Player("Lazaro", 300)]
+        self.model.playersRandom = [Player("Nicodemo", 480)]
+        self.txt_file_tool.create_file(self.model) 
+
+        with open('historico.txt', mode='r') as f:
+            content = f.read()
+
+        self.assertEqual(content, 
+                         "EASY:\nLazaro - 300\nMID:\nNicodemo - 480\nHARD:\nLazaro - 300\nRANDOM:\nNicodemo - 480\n" 
+                         )
+
+        
+    def test_create_file_no_players(self): 
+        self.model.playersEasy = [] 
+        self.model.playersMid = []
+        self.model.playersHard = []
+        self.model.playersRandom = []
+        self.txt_file_tool.create_file(self.model) 
+
+        with open('historico.txt', mode='r') as f:
+            content = f.read()
+
+        self.assertEqual(content,"")
 
 if __name__ == '__main__': 
     unittest.main()
