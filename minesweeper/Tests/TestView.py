@@ -7,13 +7,15 @@ from PyQt5.QtGui import QPixmap, QMouseEvent, QPaintEvent, QPainter
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtWidgets import QApplication, QLabel, QMenuBar
 from PyQt5.QtTest import QTest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 
 from view import View
 from view import StartButton
 from view import Board
 from view import Field
+from view import TopBox
+from view import TopPanel
 
 class TestView(unittest.TestCase):
 
@@ -65,7 +67,18 @@ class TestView(unittest.TestCase):
     @patch('PyQt5.QtWidgets.QInputDialog.getInt', return_value=(None, False))
     def test_input_box_int_cancel(self, input_mock):
         with self.assertRaises(SystemExit):
-            self.view.input_box_int("Title", "Info")        
+            self.view.input_box_int("Title", "Info")     
+        
+class TestTopBox(unittest.TestCase):
+    def setUp(self):
+        self.app = QApplication([])
+        self.controller = MagicMock()
+        self.controller.get_mines_max.return_value = 10  # Establecer el valor de retorno a un número entero
+        self.top_box = TopBox(self.controller)
+    
+    def test_create_top_panel(self):
+        self.top_box.create_top_panel()
+        self.assertIsNotNone(self.top_box.top_panel)
 
 class TestStartButton(unittest.TestCase):
 
@@ -406,6 +419,8 @@ class TestField(unittest.TestCase):
             with patch.object(self.field.controller, 'get_field') as get_field_mock:
                 self.field.paintEvent(event_mock)
         get_field_mock.assert_not_called()
+    
+
 
 if __name__ == '__main__':
     unittest.main()
