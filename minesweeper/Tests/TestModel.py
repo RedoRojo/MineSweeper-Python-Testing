@@ -1,8 +1,9 @@
 import unittest
 import sys
+from unittest.mock import MagicMock
 sys.path.append('../')
 
-from model import Model
+from model import Model, Player
 from controller import Controller
 from cell import Cell
 from view import View
@@ -299,6 +300,42 @@ class TestModel(unittest.TestCase):
         self.model.get_cell(1,1).int_state = 10
         self.model.next_mark(1, 1)
         self.assertEqual(self.model.flagged_cells, 1)
+
+    def test_store_played_games_noobie_mode(self): 
+        self.model.MINES_MAX = 10
+        mock_controller = MagicMock(spec = Controller)
+        self.model.set_controller(mock_controller)
+        mock_controller.get_text_input.return_value = "Joselito"
+        self.model.store_played_games()
+        self.assertIsInstance(self.model.playersEasy[-1], Player)
+        self.assertEqual(self.model.playersEasy[-1].get_nome(), "Joselito")
+
+    def test_store_played_games_average_mode(self): 
+        self.model.MINES_MAX = 40
+        mock_controller = MagicMock(spec = Controller)
+        self.model.set_controller(mock_controller)
+        mock_controller.get_text_input.return_value = "Joselito"
+        self.model.store_played_games()
+        self.assertIsInstance(self.model.playersMid[-1], Player)
+        self.assertEqual(self.model.playersMid[-1].get_nome(), "Joselito")
+
+    def test_store_played_games_respect_mode(self): 
+        self.model.MINES_MAX = 99
+        mock_controller = MagicMock(spec = Controller)
+        self.model.set_controller(mock_controller)
+        mock_controller.get_text_input.return_value = "Joselito"
+        self.model.store_played_games()
+        self.assertIsInstance(self.model.playersHard[-1], Player)
+        self.assertEqual(self.model.playersHard[-1].get_nome(), "Joselito")
+
+    def test_store_played_games_crazy_mode(self): 
+        self.model.MINES_MAX = 100
+        mock_controller = MagicMock(spec = Controller)
+        self.model.set_controller(mock_controller)
+        mock_controller.get_text_input.return_value = "Joselito"
+        self.model.store_played_games()
+        self.assertIsInstance(self.model.playersRandom[-1], Player)
+        self.assertEqual(self.model.playersRandom[-1].get_nome(), "Joselito")
 
 if __name__ == '__main__': 
     unittest.main()
