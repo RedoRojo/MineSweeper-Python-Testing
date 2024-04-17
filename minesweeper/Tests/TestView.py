@@ -41,7 +41,10 @@ class TestView(unittest.TestCase):
         self.assertEqual(self.view.gamemenu.title(), "&Game")
         self.assertIsNotNone(self.view.savemenu)
         self.assertEqual(self.view.savemenu.title(), "&Save")
-
+    
+    def test_create_top_box(self):
+        self.view.create_top_box()
+        self.assertIsNotNone(self.view.top_box)
     
     @patch('PyQt5.QtWidgets.QInputDialog.getText', return_value=("User Input", True))
     def test_input_box_text_success(self, input_mock):
