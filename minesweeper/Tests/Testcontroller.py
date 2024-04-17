@@ -79,5 +79,16 @@ class TestController(unittest.TestCase):
         self.controller.start_new_game_easy(); 
         self.model_mock.new_game.assert_called_once()
         self.view_mock.update.assert_called_once()
+
+    def test_start_new_game_mid(self): 
+        self.model_mock = MagicMock()
+        self.view_mock = MagicMock()
+        self.controller = Controller(self.model_mock)
+        self.controller.set_view(self.view_mock)
+        self.controller.start_new_game_mid(); 
+        self.model_mock.new_game.assert_called_once()
+        self.view_mock.update.assert_called_once()
+
+
 if __name__ == '__main__':
     unittest.main()
