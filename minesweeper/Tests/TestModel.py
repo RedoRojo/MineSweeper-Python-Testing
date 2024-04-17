@@ -343,6 +343,9 @@ class TestPlayer(unittest.TestCase):
 
     def test_get_player_name(self): 
         self.assertEqual(self.player.get_nome(), "Nicodemo")
+    
+    def test_get_player_time(self): 
+        self.assertEqual(self.player.get_time(), 300)
 
 if __name__ == '__main__': 
     unittest.main()
