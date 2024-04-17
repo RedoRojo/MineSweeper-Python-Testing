@@ -18,6 +18,12 @@ class TestModel(unittest.TestCase):
         self.model.MINES_MAX = 60
         controller = Controller(self.model)
         self.model.set_controller(controller)
+    
+    def tearDown(self):
+        try:
+            os.remove("historico.json")
+        except OSError:
+            pass
 
     def test_set_controller(self): 
         controller = Controller(self.model)
@@ -338,6 +344,17 @@ class TestModel(unittest.TestCase):
         self.model.store_played_games()
         self.assertIsInstance(self.model.playersRandom[-1], Player)
         self.assertEqual(self.model.playersRandom[-1].get_nome(), "Joselito")
+
+    def test_save_state(self): 
+        self.model.playersEasy = [Player("Lazaro", 300)]
+        self.model.save_state()
+
+        with open("historico.json", "r") as f:
+            json_data = json.load(f)
+
+        self.assertDictEqual(json_data, {
+            'Easy': {'Lazaro': 300},
+        })
 
 class TestPlayer(unittest.TestCase):
     def setUp(self) -> None:
