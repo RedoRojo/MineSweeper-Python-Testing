@@ -42,7 +42,17 @@ class TestController(unittest.TestCase):
         self.controller.left_click(0,0)
         self.view_mock.top_box.top_panel.start_btn.set_lost.assert_called_once()
     
-    
+    def test_right_click(self): 
+        self.model_mock = MagicMock()
+        self.view_mock = MagicMock()
+        self.view_mock.top_box = MagicMock()
+        self.view_mock.top_box.top_panel = MagicMock()
+        self.view_mock.top_box.top_panel.start_btn = MagicMock()
+        self.controller = Controller(self.model_mock)
+        self.controller.set_view(self.view_mock)
+        self.controller.right_click(1,1)
+        self.view_mock.top_box.top_panel.board.set.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()
