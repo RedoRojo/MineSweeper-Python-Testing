@@ -1,11 +1,12 @@
 import os
 import json
+import csv
 import sys
 import unittest
 from unittest.mock import MagicMock
 sys.path.append('../')
 
-from model import Model, Player, To_json
+from model import Model, Player, To_json, To_csv, To_txt
 from controller import Controller
 from cell import Cell
 
@@ -388,6 +389,56 @@ class TestTo_json(unittest.TestCase):
             json_data = json.load(f)
 
         self.assertDictEqual(json_data, {})
+
+class TestTo_csv(unittest.TestCase): 
+    def setUp(self) -> None:
+        self.model = Model()
+        self.csv_file_tool = To_csv()
+    
+    def tearDown(self):
+        try:
+            os.remove("historico.csv")
+        except OSError:
+            pass
+
+    def test_create_file_all_modes_players(self): 
+        self.model.playersEasy = [Player("Lazaro", 300)]
+        self.model.playersMid = [Player("Nicodemo", 480)]
+        self.model.playersHard = [Player("Lazaro", 300)]
+        self.model.playersRandom = [Player("Nicodemo", 480)]
+        self.csv_file_tool.create_file(self.model) 
+
+
+        expected_rows = [
+            {'nome': 'Lazaro', 'tempo': '300', 'dificuldade': 'easy'},
+            {'nome': 'Nicodemo', 'tempo': '480', 'dificuldade': 'mid'},
+            {'nome': 'Lazaro', 'tempo': '300', 'dificuldade': 'hard'},
+            {'nome': 'Nicodemo', 'tempo': '480', 'dificuldade': 'random'},
+        ]
+
+        with open('historico.csv', mode='r') as f:
+            reader = csv.DictReader(f)
+            rows = [row for row in reader]
+
+        self.assertEqual(expected_rows, rows)
+
+        
+    def test_create_file_no_players(self): 
+        self.model.playersEasy = [] 
+        self.model.playersMid = []
+        self.model.playersHard = []
+        self.model.playersRandom = []
+
+        self.csv_file_tool.create_file(self.model) 
+
+        expected_rows = []
+
+        with open('historico.csv', mode='r') as f:
+            reader = csv.DictReader(f)
+            rows = [row for row in reader]
+
+        self.assertEqual(expected_rows, rows)
+
 
 if __name__ == '__main__': 
     unittest.main()
