@@ -3,7 +3,7 @@ import sys
 sys.path.append('../')
 from unittest import mock
 from unittest.mock import MagicMock
-from PyQt5.QtGui import QPixmap, QMouseEvent
+from PyQt5.QtGui import QPixmap, QMouseEvent, QPaintEvent, QPainter
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtWidgets import QApplication, QLabel
 from PyQt5.QtTest import QTest
@@ -343,6 +343,57 @@ class TestField(unittest.TestCase):
         y = 1
         result = self.field.test_mouse_coordinates(x,y)
         self.assertEqual(result, False)
+    
+    def test_paint_event_first_path(self):
+        event_mock = MagicMock(spec=QPaintEvent)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_field_width.return_value = 2
+        self.controller_mock.get_field_height.return_value = 2
+
+        field_mock = [
+            [MagicMock(int_state=0), MagicMock(int_state=1)],
+            [MagicMock(int_state=2), MagicMock(int_state=3)]
+        ]
+        self.controller_mock.get_field.return_value = field_mock
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        painter_mock = MagicMock(spec=QPainter)
+        with patch.object(self.field, 'painter', painter_mock):
+            with patch.object(self.field.controller, 'get_field') as get_field_mock:
+                self.field.paintEvent(event_mock)
+        get_field_mock.assert_called()
+    
+    def test_paint_event_second_path(self):
+        event_mock = MagicMock(spec=QPaintEvent)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_field_width.return_value = 0
+        self.controller_mock.get_field_height.return_value = 2
+
+        field_mock = [
+            [MagicMock(int_state=0), MagicMock(int_state=1)],
+            [MagicMock(int_state=2), MagicMock(int_state=3)]
+        ]
+        self.controller_mock.get_field.return_value = field_mock
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        painter_mock = MagicMock(spec=QPainter)
+        with patch.object(self.field, 'painter', painter_mock):
+            with patch.object(self.field.controller, 'get_field') as get_field_mock:
+                self.field.paintEvent(event_mock)
+        get_field_mock.assert_not_called()
+    
+    def test_paint_event_third_path(self):
+        event_mock = MagicMock(spec=QPaintEvent)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_field_width.return_value = 0
+        self.controller_mock.get_field_height.return_value = 0
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        painter_mock = MagicMock(spec=QPainter)
+        with patch.object(self.field, 'painter', painter_mock):
+            with patch.object(self.field.controller, 'get_field') as get_field_mock:
+                self.field.paintEvent(event_mock)
+        get_field_mock.assert_not_called()
 
 if __name__ == '__main__':
     unittest.main()
