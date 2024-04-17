@@ -1,12 +1,13 @@
-import unittest
+import os
+import json
 import sys
+import unittest
 from unittest.mock import MagicMock
 sys.path.append('../')
 
-from model import Model, Player
+from model import Model, Player, To_json
 from controller import Controller
 from cell import Cell
-from view import View
 
 class TestModel(unittest.TestCase): 
     def setUp(self) -> None:
@@ -346,6 +347,47 @@ class TestPlayer(unittest.TestCase):
     
     def test_get_player_time(self): 
         self.assertEqual(self.player.get_time(), 300)
+
+class TestTo_json(unittest.TestCase): 
+    def setUp(self) -> None:
+        self.model = Model()
+        self.jsonfiletool = To_json()
+    
+    def tearDown(self):
+        try:
+            os.remove("historico.json")
+        except OSError:
+            pass
+
+    def test_create_file_all_modes_players(self): 
+        self.model.playersEasy = [Player("Lazaro", 300)]
+        self.model.playersMid = [Player("Nicodemo", 480)]
+        self.model.playersHard = [Player("Lazaro", 300)]
+        self.model.playersRandom = [Player("Nicodemo", 480)]
+        self.jsonfiletool.create_file(self.model) 
+
+        with open("historico.json", "r") as f:
+            json_data = json.load(f)
+
+        self.assertDictEqual(json_data, {
+            'Easy': {'Lazaro': 300},
+            'Mid': {'Nicodemo': 480},
+            'Hard': {'Lazaro': 300},
+            'Random': {'Nicodemo': 480}
+        })
+        
+    def test_create_file_no_players(self): 
+        self.model.playersEasy = [] 
+        self.model.playersMid = []
+        self.model.playersHard = []
+        self.model.playersRandom = []
+
+        self.jsonfiletool.create_file(self.model) 
+
+        with open("historico.json", "r") as f:
+            json_data = json.load(f)
+
+        self.assertDictEqual(json_data, {})
 
 if __name__ == '__main__': 
     unittest.main()

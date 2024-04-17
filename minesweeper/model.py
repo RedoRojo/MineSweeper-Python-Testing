@@ -296,25 +296,25 @@ class To_json(TypeFile):
     def create_file(self, model):
         json_dict = {}
         if len(model.playersEasy) != 0:
-            easy_dict = {"NamePlayer": "PlayTime"}
+            easy_dict = {}
             for player in model.playersEasy:
                 easy_dict[player.get_nome()] = player.get_time()
             json_dict["Easy"] = easy_dict
 
         if len(model.playersMid) != 0:
-            mid_dict = {"NamePlayer": "PlayTime"}
+            mid_dict = {}
             for player in model.playersMid:
                 mid_dict[player.get_nome()] = player.get_time()
             json_dict["Mid"] = mid_dict
 
         if len(model.playersHard) != 0:
-            hard_dict = {"NamePlayer": "PlayTime"}
+            hard_dict = {}
             for player in model.playersHard:
                 hard_dict[player.get_nome()] = player.get_time()
             json_dict["Hard"] = hard_dict
 
         if len(model.playersRandom) != 0:
-            rand_dict = {"NamePlayer": "PlayTime"}
+            rand_dict = {}
             for player in model.playersRandom:
                 rand_dict[player.get_nome()] = player.get_time()
             json_dict["Random"] = rand_dict
