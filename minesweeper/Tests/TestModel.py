@@ -231,6 +231,41 @@ class TestModel(unittest.TestCase):
         self.model.open_cells = 10
         self.model.flag_win = 1
         self.assertEqual(self.model.game_status(), "Game")
+        
+    def test_game_over_not_opened_mined_cell(self): 
+        self.model.create_field()
+        self.model.get_cell(1, 1).mined = True
+        self.model.get_cell(1, 1).state = "closed"
+        self.model.game_over()
+        self.assertEqual(self.model.get_cell(1, 1).int_state, 12)
+
+    def test_game_over_opened_mined_cell(self): 
+        self.model.create_field()
+        self.model.get_cell(1, 1).mined = True
+        self.model.get_cell(1, 1).state = "opened"
+        self.model.game_over()
+        self.assertEqual(self.model.get_cell(1, 1).int_state, 13)
+
+    def test_game_over_flagged_mined_cell(self): 
+        self.model.create_field()
+        self.model.get_cell(1, 1).mined = True
+        self.model.get_cell(1, 1).state = "flagged"
+        self.model.game_over()
+        self.assertEqual(self.model.get_cell(1, 1).int_state, 9)
+
+    def test_game_over_flagged_not_mined_cell(self): 
+        self.model.create_field()
+        self.model.get_cell(1, 1).mined = False
+        self.model.get_cell(1, 1).state = "flagged"
+        self.model.game_over()
+        self.assertEqual(self.model.get_cell(1, 1).int_state, 14)
+
+    def test_game_over_opened_not_mined_cell(self): 
+        self.model.create_field()
+        self.model.get_cell(1, 1).mined = False
+        self.model.get_cell(1, 1).state = "opened"
+        self.model.game_over()
+        self.assertEqual(self.model.get_cell(1, 1).int_state, 9)
 
 if __name__ == '__main__': 
     unittest.main()
