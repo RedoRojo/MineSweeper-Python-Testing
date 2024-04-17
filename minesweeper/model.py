@@ -358,8 +358,6 @@ class To_csv(TypeFile):
 class To_txt(TypeFile):
     def create_file(self, model):
         with open('historico.txt', 'w') as arquivo:
-            arquivo.write('Histórico dos Jogadores da Sessão\n')
-            arquivo.write('Nome - Tempo de Jogo\n')
             if len(model.playersEasy) != 0:
                 arquivo.write('EASY:\n')
                 for player in model.playersEasy:

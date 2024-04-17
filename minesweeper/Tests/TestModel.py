@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import MagicMock
 sys.path.append('../')
 
-from model import Model, Player, To_json, To_csv, To_txt
+from model import Model, Player, To_json, To_csv, To_txt, SaveGame
 from controller import Controller
 from cell import Cell
 
@@ -476,6 +476,28 @@ class TestTo_txt(unittest.TestCase):
             content = f.read()
 
         self.assertEqual(content,"")
+
+class TestSaveGame(unittest.TestCase): 
+    def setUp(self) -> None:
+        self.saver = SaveGame()
+        self.model = Model()
+
+    def tearDown(self):
+        try:
+            os.remove("historico.json")
+        except OSError:
+            pass
+
+    def test_start_save(self): 
+        self.model.playersEasy = [Player("Lazaro", 300)]
+        self.saver.start_save(self.model)
+
+        with open("historico.json", "r") as f:
+            json_data = json.load(f)
+
+        self.assertDictEqual(json_data, {
+            'Easy': {'Lazaro': 300},
+        })
 
 if __name__ == '__main__': 
     unittest.main()
