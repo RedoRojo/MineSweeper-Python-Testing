@@ -343,14 +343,12 @@ class Field(QWidget):
                 0 <= y <= self.SIZE * self.controller.get_field_height())
 
     def paintEvent(self, event):
-
         self.painter = QPainter(self)
         for y in range(self.controller.get_field_height()):
             for x in range(self.controller.get_field_width()):
                 field = self.controller.get_field()
                 asset = self.assets[field[y][x].int_state]
                 self.painter.drawPixmap(x * self.SIZE, y * self.SIZE, asset)
-
         self.painter.end()
 
 

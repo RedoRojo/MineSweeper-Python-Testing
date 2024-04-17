@@ -319,6 +319,30 @@ class TestField(unittest.TestCase):
         self.field.last_y = 10000
         self.field.mousePressEvent(event_mock)
         self.assertNotEqual((self.field.last_x, self.field.last_y), (0,0))
+    
+    def test_for_test_mouse_coordinates(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        x = 1
+        y = 1
+        result = self.field.test_mouse_coordinates(x,y)
+        self.assertEqual(result, True)
+    
+    def test_for_test_mouse_coordinates_second_path(self):
+        event_mock = MagicMock(spec=QMouseEvent)
+        self.controller_mock = MagicMock()
+        self.top_panel_mock = MagicMock()
+        self.controller_mock.get_field_width.return_value = 100
+        self.controller_mock.get_field_height.return_value = 100
+        self.field = Field(self.controller_mock, self.top_panel_mock)
+        x = -1
+        y = 1
+        result = self.field.test_mouse_coordinates(x,y)
+        self.assertEqual(result, False)
 
 if __name__ == '__main__':
     unittest.main()
