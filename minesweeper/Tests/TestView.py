@@ -132,6 +132,27 @@ class TestStartButton(unittest.TestCase):
         self.app = QApplication([])
         self.controller_mock = MagicMock()
         self.start_button = StartButton(self.controller_mock)
+        self.start_button.smiles = [QPixmap(), QPixmap(), QPixmap(), QPixmap()]
+    
+    def test_set_start(self):
+        self.start_button.load_smiles()
+        self.start_button.set_start()
+        self.assertIsNotNone(self.start_button.pixmap)
+    
+    def test_set_lost(self):
+        self.start_button.load_smiles()
+        self.start_button.set_lost()
+        self.assertIsNotNone(self.start_button.pixmap)
+    
+    def test_set_uhoh(self):
+        self.start_button.load_smiles()
+        self.start_button.set_uhoh()
+        self.assertIsNotNone(self.start_button.pixmap)
+    
+    def test_set_won(self):
+        self.start_button.load_smiles()
+        self.start_button.set_won()
+        self.assertIsNotNone(self.start_button.pixmap)
     
     def test_load_smiles_success(self):
         QPixmap.return_value = QPixmap(44, 44)
