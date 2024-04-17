@@ -5,7 +5,7 @@ from unittest import mock
 from unittest.mock import MagicMock
 from PyQt5.QtGui import QPixmap, QMouseEvent, QPaintEvent, QPainter
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtWidgets import QApplication, QLabel
+from PyQt5.QtWidgets import QApplication, QLabel, QMenuBar
 from PyQt5.QtTest import QTest
 from unittest.mock import patch
 
@@ -33,6 +33,15 @@ class TestView(unittest.TestCase):
         self.assertTrue(self.view.centralWidget().layout() is not None)
         self.assertEqual(self.view.centralWidget().layout(), self.view.top_box)
         self.assertEqual(self.view.top_box.alignment(), Qt.AlignCenter)
+    
+    def test_create_menu_bar(self):
+        self.view.create_menubar()
+        self.assertIsInstance(self.view.menubar, QMenuBar)
+        self.assertIsNotNone(self.view.gamemenu)
+        self.assertEqual(self.view.gamemenu.title(), "&Game")
+        self.assertIsNotNone(self.view.savemenu)
+        self.assertEqual(self.view.savemenu.title(), "&Save")
+
     
     @patch('PyQt5.QtWidgets.QInputDialog.getText', return_value=("User Input", True))
     def test_input_box_text_success(self, input_mock):
